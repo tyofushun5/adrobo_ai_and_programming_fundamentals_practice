@@ -12,10 +12,18 @@ config = {
     "batch_size": 128,
     "learning_rate": 1e-4,
     "weight_decay": 5e-4,
-    "epochs": 30
+    "epochs": 40
 }
 
 transform = transforms.Compose([
+    transforms.RandomHorizontalFlip(),
+    transforms.ColorJitter(),
+    transforms.RandomRotation(degrees=15),
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,),(0.5,))
+])
+
+validation_transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.5,),(0.5,))
 ])
@@ -66,6 +74,7 @@ val_accuracies = []
 for epoch in range(config["epochs"]):
     running_loss = 0.0
     running_accuracies = 0.0
+
     for imgs, labels in train_loader:
         imgs = imgs.to(config["device"])
         labels = labels.to(config["device"])
@@ -84,8 +93,10 @@ for epoch in range(config["epochs"]):
     accuracies.append(running_accuracies)
     print("epoch : ", epoch, "loss : ", running_loss, "accuracy : ", running_accuracies)
 
+
     validation_loss = 0.0
     validation_accuracies = 0.0
+
     for validation_imgs, validation_labels in validation_loader:
         validation_imgs = validation_imgs.to(config["device"])
         validation_labels = validation_labels.to(config["device"])
