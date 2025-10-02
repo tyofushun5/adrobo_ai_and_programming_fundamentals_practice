@@ -5,9 +5,6 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 config = {
@@ -54,8 +51,8 @@ for epoch in range(config["epochs"]):
         outputs = model(imgs)
         loss = criterion(outputs, labels)
         running_loss += loss.item()
-        pred = torch.argmax(outputs, dim=1)
-        running_accuracies += torch.mean(pred.eq(labels).float())
+        prediction = torch.argmax(outputs, dim=1)
+        running_accuracies += torch.mean(prediction.eq(labels).float())
         loss.backward()
         optimizer.step()
     running_loss /= len(dataloader)
@@ -63,7 +60,6 @@ for epoch in range(config["epochs"]):
     losses.append(running_loss)
     accuracies.append(running_accuracies)
     print("epoch : ", epoch, "loss : ", running_loss, "accuracy : ", running_accuracies)
-
 
 
 
